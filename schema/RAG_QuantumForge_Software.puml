@@ -1,0 +1,134 @@
+@startuml
+!theme plain
+skinparam componentStyle rectangle
+skinparam backgroundColor #FEFEFE
+skinparam component {
+  BackgroundColor #E8F4FD
+  BorderColor #2C3E50
+  FontColor #2C3E50
+  FontName Arial
+  FontSize 12
+}
+skinparam database {
+  BackgroundColor #F0F8E8
+  BorderColor #2C3E50
+}
+skinparam node {
+  BackgroundColor #FFF9E6
+  BorderColor #2C3E50
+}
+skinparam rectangle {
+  BackgroundColor #F5F5F5
+  BorderColor #2C3E50
+}
+skinparam arrow {
+  Color #34495E
+}
+
+title Архитектура RAG-бота для QuantumForge Software
+
+actor "Пользователь\n(Telegram)" as User #E8F4FD
+component "Telegram Бот\n(FastAPI + python-telegram-bot)" as Telegram #D4E6F1
+component "Маршрутизатор запросов\n(Анализ метаданных + ключевых слов)" as Router #F9E79F
+note right of Router
+  Определяет конфиденциальность:
+  - Terraform state
+  - ADR / Спецификации
+  - Финансовые данные
+  - Имена клиентов (ABB, Wärtsilä)
+end note
+
+node "Локальный контур\n(Таллин, R&D отдел)" as LocalContour {
+
+  component "Обработка документов\n(Чанкинг + Метаданные)" as DocProc #FCF3CF {
+    note right of DocProc
+      - Чанкинг (512-1024 токенов)
+      - Извлечение метаданных
+      - Очистка текста
+    end note
+  }
+
+  rectangle "BGE-M3\n(Эмбеддинги)" as BGE #D5F5E3 {
+    note right of BGE: Плотные + Разреженные + ColBERT\nMulti-Functionality 3-в-1\n1024 dim, 8GB VRAM
+  }
+
+  database "FAISS-GPU\n(Векторная БД)" as FAISS #D5F5E3 {
+    note right of FAISS: 10.7M векторов\nПлотные + Разреженные + ColBERT\nГибридный поиск\nИндексация: ~30-35 сек
+  }
+
+  database "Хранилище метаданных\n(SQLite)" as Metadata #F0F8E8 {
+    note right of Metadata
+      - источник, страница
+      - временная метка
+      - уровень доступа
+      - тип документа
+    end note
+  }
+
+  component "Qwen3-30B-A3B\n(LLM для конфиденциальных)" as Qwen #FADBD8 {
+    note right of Qwen: MoE: 30B всего, 3B активных\nApache 2.0\nЗапуск: 2×RTX 4090
+  }
+
+  component "YandexGPT-5-Lite-8B\n(LLM для русскоязычных)" as Yandex #FADBD8 {
+    note right of Yandex: Для русскоязычных конфиденц.\nЗапуск: RTX 4090
+  }
+
+  rectangle "Хранилище документов\n(PDF, MD, Confluence)" as Docs #FCF3CF
+
+  ' Поток индексации документов
+  Docs --> DocProc : "Загрузка документов"
+  DocProc --> BGE : "Чанки + метаданные"
+  DocProc --> Metadata : "Сохранение метаданных"
+  BGE --> FAISS : "Векторы"
+  FAISS --> Metadata : "Связь векторов\nс метаданными"
+}
+
+node "Облачный контур\n(DeepSeek API)" as CloudContour #D6EAF8 {
+  component "DeepSeek-V4 Flash\n(LLM для открытых данных)" as DeepSeek #AED6F1 {
+    note right of DeepSeek: 1M контекст\n$0.14 ввод / $0.28 вывод\nMIT-лицензия\n86.2% MMLU-Pro
+  }
+}
+
+rectangle "RAG Pipeline\n(LangChain)" as RAG #E8DAEF
+
+' Поток запросов
+User --> Telegram : "Запрос"
+Telegram --> Router : "Передача запроса"
+Router --> Qwen : "Конфиденциальный запрос\n(Terraform, ADR,\nклиенты)"
+Router --> DeepSeek : "Открытый запрос\n(README, Wiki,\nобщая документация)"
+Router --> Yandex : "Русскоязычный\nконфиденциальный"
+
+' Поток RAG
+Qwen --> RAG : "Запрос на генерацию"
+DeepSeek --> RAG : "Запрос на генерацию"
+Yandex --> RAG : "Запрос на генерацию"
+
+RAG --> BGE : "Эмбеддинг запроса"
+BGE --> RAG : "Вектор запроса"
+RAG --> FAISS : "Поиск релевантных\nчанков"
+FAISS --> RAG : "Релевантные чанки"
+RAG --> Metadata : "Получение метаданных"
+Metadata --> RAG : "Метаданные чанков"
+
+RAG --> Qwen : "Контекст + промпт"
+RAG --> DeepSeek : "Контекст + промпт"
+RAG --> Yandex : "Контекст + промпт"
+
+Qwen --> RAG : "Сгенерированный ответ"
+DeepSeek --> RAG : "Сгенерированный ответ"
+Yandex --> RAG : "Сгенерированный ответ"
+
+RAG --> Telegram : "Финальный ответ"
+Telegram --> User : "Ответ"
+
+legend right
+  | Цвет | Значение |
+  |<back:#D5F5E3> </back>| Локальные компоненты (полный контроль) |
+  |<back:#AED6F1> </back>| Облачные компоненты (открытые данные) |
+  |<back:#FADBD8> </back>| LLM для конфиденциальных данных |
+  |<back:#F9E79F> </back>| Маршрутизация запросов |
+  |<back:#E8DAEF> </back>| RAG Pipeline |
+  |<back:#FCF3CF> </back>| Обработка документов |
+end legend
+
+@enduml
