@@ -78,7 +78,9 @@ if __name__ == "__main__":
         "Что такое Svetomech?",
         "Где находится Sukhostep?",
         "Что такое Orden Vedunov?",
-        "Что произошло в Bitva pri Zelyonoy Lune?"
+        "Что произошло в Bitva pri Zelyonoy Lune?",
+        "swordfish",
+        "root",
     ]
 
     for query in queries:

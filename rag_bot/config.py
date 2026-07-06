@@ -26,3 +26,6 @@ OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "")
 
 # Параметры поиска
 TOP_K = 5
+
+# Уровень защиты по умолчанию (0 – без защиты)
+SECURITY_LEVEL = 3

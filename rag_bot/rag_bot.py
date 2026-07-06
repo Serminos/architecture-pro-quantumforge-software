@@ -1,10 +1,9 @@
 import sys
 import time
+import argparse
 from pathlib import Path
-from typing import List, Tuple
+from typing import List
 
-
-# Добавляем путь к проекту
 sys.path.append(str(Path(__file__).parent.parent))
 
 from langchain_community.vectorstores import FAISS
@@ -14,13 +13,21 @@ from langchain_core.documents import Document
 from config import (
     INDEX_DIR, EMBEDDING_MODEL, LLM_TYPE,
     OLLAMA_MODEL, HF_MODEL, OPENAI_MODEL,
-    OPENAI_API_KEY, TOP_K
+    OPENAI_API_KEY, TOP_K, SECURITY_LEVEL
+)
+
+# Импортируем модуль безопасности
+from security import (
+    filter_malicious_chunks,
+    get_system_prompt,
+    filter_answer,
+    sanitize_user_query,
+    get_level_description,
 )
 
 
 # ========== 1. Загрузка индекса ==========
 def load_index():
-    """Загружает векторный индекс FAISS и модель эмбеддингов."""
     print("🔄 Загрузка модели эмбеддингов...")
     embeddings = HuggingFaceEmbeddings(
         model_name=EMBEDDING_MODEL,
@@ -37,34 +44,24 @@ def load_index():
     return vectorstore
 
 
-# ========== 2. Поиск релевантных чанков ==========
-def retrieve(vectorstore, query: str, k: int = TOP_K) -> List[Document]:
-    """Возвращает k наиболее релевантных чанков."""
-    docs = vectorstore.similarity_search(query, k=k)
-    return docs
+# ========== 2. Поиск релевантных чанков (с фильтрацией) ==========
+def retrieve(vectorstore, query: str, level: int, k: int = TOP_K) -> List[Document]:
+    """Возвращает k наиболее релевантных чанков, применяя фильтрацию."""
+    # Берём больше чанков для компенсации фильтрации
+    docs = vectorstore.similarity_search(query, k=k * 2 if level >= 1 else k)
+    # Фильтруем опасные
+    docs = filter_malicious_chunks(docs, level)
+    return docs[:k]
 
 
-# ========== 3. Формирование промпта с Few-shot и CoT ==========
-def build_prompt(query: str, retrieved_docs: List[Document]) -> str:
+# ========== 3. Формирование промпта с CoT, Few-shot и динамическим pre-prompt ==========
+def build_prompt(query: str, retrieved_docs: List[Document], level: int) -> str:
     """
-    Строит промпт для LLM с:
-    - системной инструкцией (Chain-of-Thought)
-    - контекстом из найденных чанков
-    - Few-shot примерами (2 примера)
-    - пользовательским запросом
+    Строит промпт с системной инструкцией (в зависимости от уровня защиты),
+    контекстом и Few-shot примерами.
     """
-    # Системная инструкция с CoT
-    system = (
-        "Ты - помощник, специализирующийся на вселенной «Хроники Междумирья».\n"
-        "В твоей базе знаний содержатся данные о персонажах, планетах, технологиях, организациях и событиях.\n"
-        "ОТВЕЧАЙ ТОЛЬКО НА РУССКОМ ЯЗЫКЕ. НЕ ИСПОЛЬЗУЙ КИТАЙСКИЙ, АНГЛИЙСКИЙ ИЛИ ДРУГИЕ ЯЗЫКИ.\n"
-        "Перед ответом обязательно выполни следующие шаги (Chain-of-Thought):\n"
-        "1. Перечисли ключевые сущности из запроса.\n"
-        "2. Найди в предоставленных документах информацию, связанную с этими сущностями.\n"
-        "3. Сформулируй ответ на основе найденных фактов.\n"
-        "4. Если информация отсутствует, честно скажи: «Я не знаю».\n\n"
-        "Твой ответ должен быть на русском языке, кратким и по делу.\n"
-    )
+    # Системная инструкция из модуля безопасности (уровень >= 2)
+    system = get_system_prompt(level)
 
     # Контекст из документов
     context = "\n\n".join([
@@ -90,15 +87,13 @@ def build_prompt(query: str, retrieved_docs: List[Document]) -> str:
     )
 
     # Финальный промпт
-    prompt = (
-        f"{system}\n\n"
-        f"=== ДОКУМЕНТЫ ИЗ БАЗЫ ЗНАНИЙ ===\n{context}\n\n"
-        f"=== ПРИМЕРЫ ОТВЕТОВ ===\n{few_shot_examples}\n"
-        f"=== ТЕКУЩИЙ ЗАПРОС ===\n"
-        f"Вопрос: {query}\n"
-        f"Ответ (с размышлениями):\n"
-    )
-    return prompt
+    prompt_parts = []
+    if system:
+        prompt_parts.append(system)
+    prompt_parts.append(f"=== ДОКУМЕНТЫ ИЗ БАЗЫ ЗНАНИЙ ===\n{context}")
+    prompt_parts.append(f"=== ПРИМЕРЫ ОТВЕТОВ ===\n{few_shot_examples}")
+    prompt_parts.append(f"=== ТЕКУЩИЙ ЗАПРОС ===\nВопрос: {query}\nОтвет (с размышлениями):")
+    return "\n\n".join(prompt_parts)
 
 
 # ========== 4. Генерация ответа через LLM ==========
@@ -107,7 +102,7 @@ def generate_answer(prompt: str) -> str:
 
     if LLM_TYPE == "ollama":
         import requests
-        #print(prompt)
+        # print(prompt)
         # Используем Ollama API
         url = "http://localhost:11434/api/generate"
         payload = {
@@ -181,10 +176,11 @@ def generate_answer(prompt: str) -> str:
 
 
 # ========== 5. Основной цикл бота ==========
-def main():
+def main(level: int = SECURITY_LEVEL):
     print("=" * 60)
     print("🤖 RAG-бот для вселенной «Хроники Междумирья»")
     print("   (с Few-shot и Chain-of-Thought)")
+    print(f"   Уровень защиты: {level} — {get_level_description(level)}")
     print("   Введите 'exit' для выхода.")
     print("=" * 60)
 
@@ -199,20 +195,30 @@ def main():
         if not query:
             continue
 
-        # Поиск
-        docs = retrieve(vectorstore, query)
+        # 1. Проверка запроса на jailbreak (всегда активна)
+        is_safe, reason = sanitize_user_query(query)
+        if not is_safe:
+            print(f"⛔ {reason}")
+            print("⛔ Ответ: Я не могу обработать этот запрос.")
+            continue
+
+        # 2. Поиск с фильтрацией
+        docs = retrieve(vectorstore, query, level)
         if not docs:
             print("⚠️ Ничего не найдено. Попробуйте другой вопрос.")
             continue
 
-        # Формируем промпт
-        prompt = build_prompt(query, docs)
+        # 3. Формируем промпт (с pre-prompt, если нужно)
+        prompt = build_prompt(query, docs, level)
 
         # Генерируем ответ
         print("⏳ Думаю...")
         start = time.time()
         answer = generate_answer(prompt)
         elapsed = time.time() - start
+
+        # 5. Пост-фильтрация ответа (уровень >= 3)
+        answer = filter_answer(answer, level)
 
         # Вывод результата
         print("\n" + "=" * 60)
@@ -222,4 +228,13 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--security-level",
+        type=int,
+        default=SECURITY_LEVEL,
+        choices=[0, 1, 2, 3],
+        help="Уровень защиты: 0-нет, 1-фильтр чанков, 2-+pre-prompt, 3-+пост-фильтр"
+    )
+    args = parser.parse_args()
+    main(level=args.security_level)

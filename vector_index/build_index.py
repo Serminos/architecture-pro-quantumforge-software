@@ -15,7 +15,7 @@ SCRIPT_DIR = Path(__file__).parent
 DOCS_DIR = SCRIPT_DIR.parent / "knowledge_base" / "final"
 INDEX_DIR = SCRIPT_DIR / "indices" / "faiss_index"
 
-CHUNK_SIZE = 1536  # Увеличен для лучшего контекста
+CHUNK_SIZE = 1536
 CHUNK_OVERLAP = 200
 MODEL_NAME = "BAAI/bge-m3"
 
@@ -34,7 +34,7 @@ def load_documents(docs_dir: Path) -> List[Document]:
     for file_path in file_paths:
         try:
             content = file_path.read_text(encoding="utf-8")
-            if len(content.strip()) < 50:
+            if len(content.strip()) < 10:
                 continue
 
             relative_path = file_path.relative_to(docs_dir)
