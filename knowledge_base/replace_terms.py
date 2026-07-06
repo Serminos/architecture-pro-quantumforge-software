@@ -10,19 +10,17 @@ def load_terms(filepath):
 
 
 def replace_terms_in_text(text, terms_map):
-    # Собираем все замены из всех категорий
     all_terms = {}
-    for category in ['characters', 'planets', 'technologies', 'organizations', 'events']:
+    for category in ['characters', 'planets', 'technologies', 'organizations', 'events', 'races_species',
+                     'concepts_organizations', 'locations', 'weapons', 'ships', 'misc']:
         if category in terms_map:
             all_terms.update(terms_map[category])
 
-    # Сортируем по длине (сначала длинные фразы)
+    # Сортируем по убыванию длины (сначала длинные фразы)
     sorted_terms = sorted(all_terms.items(), key=lambda x: len(x[0]), reverse=True)
 
     for original, replacement in sorted_terms:
-        # Заменяем только целые слова (с учётом границ)
-        pattern = r'\b' + re.escape(original) + r'\b'
-        text = re.sub(pattern, replacement, text)
+        text = text.replace(original, replacement)
 
     return text
 
