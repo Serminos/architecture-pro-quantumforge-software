@@ -1,0 +1,49 @@
+@startuml
+!theme plain
+skinparam componentStyle rectangle
+skinparam backgroundColor #FEFEFE
+
+title Архитектура автоматического обновления индекса
+
+folder "knowledge_base/incoming/" as Incoming #FCF3CF {
+  [new_doc1.txt]
+  [new_doc2.html]
+}
+
+component "update_index.py" as Updater #D5F5E3 {
+  [Поиск новых файлов]
+  [Загрузка документов]
+  [Чанкинг (build_index.py)]
+  [Эмбеддинги (BGE-M3)]
+  [Добавление в FAISS]
+  [Сохранение индекса]
+  [Логирование]
+}
+
+database "FAISS-индекс" as Index #D5F5E3 {
+  [index.faiss]
+  [index.pkl]
+}
+
+database "Лог (log.json)" as Log #FFF9E6 {
+  [timestamp]
+  [files_added]
+  [chunks_added]
+  [errors]
+}
+
+folder "knowledge_base/processed/" as Processed #FCF3CF {
+  [new_doc1.txt]
+  [new_doc2.html]
+}
+
+note right of Updater
+  Запуск: ежедневно в 06:00
+  (Windows Task Scheduler)
+end note
+
+Incoming --> Updater : "Сканирование"
+Updater --> Index : "Добавление чанков"
+Updater --> Processed : "Перемещение"
+Updater --> Log : "Запись результата"
+@enduml

@@ -1,3 +1,5 @@
 .idea/*
 /vector_index/indices/faiss_index/
 *.pyc
+*.faiss
+*.pkl
