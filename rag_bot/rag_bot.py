@@ -10,14 +10,11 @@ from langchain_community.vectorstores import FAISS
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_core.documents import Document
 
-from config import (
-    INDEX_DIR, EMBEDDING_MODEL, LLM_TYPE,
-    OLLAMA_MODEL, HF_MODEL, OPENAI_MODEL,
-    OPENAI_API_KEY, TOP_K, SECURITY_LEVEL
-)
+from rag_bot.config import INDEX_DIR, EMBEDDING_MODEL, LLM_TYPE, OLLAMA_MODEL, HF_MODEL, OPENAI_MODEL, OPENAI_API_KEY, \
+    TOP_K, SECURITY_LEVEL
 
 # Импортируем модуль безопасности
-from security import (
+from security.security import (
     filter_malicious_chunks,
     get_system_prompt,
     filter_answer,

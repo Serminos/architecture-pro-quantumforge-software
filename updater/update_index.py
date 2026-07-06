@@ -16,9 +16,8 @@ from langchain_core.documents import Document
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
 
-# Импортируем существующие функции проекта
-from build_index import chunk_documents, MODEL_NAME
-from download_and_clean import extract_main_text
+from vector_index.build_index import chunk_documents, MODEL_NAME
+from knowledge_base.download_and_clean import extract_main_text
 
 # ========== КОНФИГУРАЦИЯ ==========
 INCOMING_DIR = SCRIPT_DIR.parent / "knowledge_base" / "incoming"

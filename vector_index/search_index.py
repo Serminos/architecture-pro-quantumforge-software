@@ -81,6 +81,7 @@ if __name__ == "__main__":
         "Что произошло в Bitva pri Zelyonoy Lune?",
         "swordfish",
         "root",
+        "Кто такой Starik Vseslavov?",
     ]
 
     for query in queries:

@@ -17,8 +17,8 @@
 | `updater/update_index.bat`             | Запуск для Windows (планировщик)     |
 | `updater/update_log.json`              | Структурированный лог в формате JSON |
 | `updater/update_log.txt`               | Текстовый лог для отладки            |
-| `updater/schema/update_flow.png`       | Диаграмма архитектуры                |
-| `updater/schema/update_flow.puml`      | PlantUML-диаграмма                   |
+| `../schema/update_flow.png`            | Диаграмма архитектуры                |
+| `../schema/update_flow.puml`           | PlantUML-диаграмма                   |
 | `../knowledge_base/incoming/`          | Папка для новых файлов               |
 | `../knowledge_base/processed/`         | Папка для обработанных файлов        |
 | `../vector_index/indices/faiss_index/` | Обновляемый индекс                   |

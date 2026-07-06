@@ -1,0 +1,160 @@
+{
+  "metadata": {
+    "description": "Золотой набор вопросов для оценки RAG-бота",
+    "version": "2.0",
+    "created": "2026-07-06"
+  },
+  "questions": [
+    {
+      "id": "Q001",
+      "question": "Кто такой Ivan Nebov?",
+      "expected_keywords": [
+        "Ivan Nebov",
+        "главный герой",
+        "мастер-ведун",
+        "Sukhostep"
+      ],
+      "should_answer": true,
+      "category": "characters"
+    },
+    {
+      "id": "Q002",
+      "question": "Что такое Svetomech?",
+      "expected_keywords": [
+        "Svetomech",
+        "оружие",
+        "Ведунов",
+        "плазма"
+      ],
+      "should_answer": true,
+      "category": "technologies"
+    },
+    {
+      "id": "Q003",
+      "question": "Где находится Sukhostep?",
+      "expected_keywords": [
+        "Sukhostep",
+        "планета",
+        "Outer Rim",
+        "пустынная"
+      ],
+      "should_answer": true,
+      "category": "planets"
+    },
+    {
+      "id": "Q004",
+      "question": "Что такое Orden Vedunov?",
+      "expected_keywords": [
+        "Orden Vedunov",
+        "орден",
+        "Ведуны",
+        "монашеский"
+      ],
+      "should_answer": true,
+      "category": "organizations"
+    },
+    {
+      "id": "Q005",
+      "question": "Что произошло в Bitva pri Zelyonoy Lune?",
+      "expected_keywords": [
+        "Zelyonoy Lune",
+        "битва",
+        "Zvezda Smerti",
+        "Volny Soyuz"
+      ],
+      "should_answer": true,
+      "category": "events"
+    },
+    {
+      "id": "Q006",
+      "question": "Кто такой Semyon Tyomnov?",
+      "expected_keywords": [
+        "Semyon Tyomnov",
+        "антагонист",
+        "Tyomnaya Storona",
+        "Vselennaya Derzhava"
+      ],
+      "should_answer": true,
+      "category": "characters"
+    },
+    {
+      "id": "Q007",
+      "question": "Что такое Zvezda Smerti?",
+      "expected_keywords": [
+        "Zvezda Smerti",
+        "супероружие",
+        "уничтожена",
+        "Bitva"
+      ],
+      "should_answer": true,
+      "category": "technologies"
+    },
+    {
+      "id": "Q008",
+      "question": "Кто такая Olga Knyazeva?",
+      "expected_keywords": [
+        "Olga Knyazeva",
+        "принцесса",
+        "Volny Soyuz"
+      ],
+      "should_answer": true,
+      "category": "characters"
+    },
+    {
+      "id": "Q009",
+      "question": "Кто такой Starik Vseslavov?",
+      "expected_keywords": [
+        "Starik Vseslavov",
+        "учитель",
+        "Оби-Ван"
+      ],
+      "should_answer": false,
+      "category": "characters",
+      "note": "УДАЛЁН — файл starik_vseslavov.txt удалён"
+    },
+    {
+      "id": "Q010",
+      "question": "Где находится Aquaria?",
+      "expected_keywords": [
+        "Aquaria",
+        "планета",
+        "вода"
+      ],
+      "should_answer": false,
+      "category": "planets",
+      "note": "УДАЛЁН — файл aquaria.txt удалён"
+    },
+    {
+      "id": "Q011",
+      "question": "Что такое Giperprivod?",
+      "expected_keywords": [
+        "Giperprivod",
+        "гиперпривод",
+        "двигатель"
+      ],
+      "should_answer": false,
+      "category": "technologies",
+      "note": "УДАЛЁН — файл giperprivod.txt удалён"
+    },
+    {
+      "id": "Q012",
+      "question": "Кто такой Petr Smelchakov?",
+      "expected_keywords": [
+        "Petr Smelchakov"
+      ],
+      "should_answer": false,
+      "category": "characters",
+      "note": "НЕ СУЩЕСТВУЕТ — персонаж не описан в базе"
+    },
+    {
+      "id": "Q013",
+      "question": "Что произошло v Bitve pri Moskva?",
+      "expected_keywords": [
+        "Moskva"
+      ],
+      "should_answer": false,
+      "category": "events",
+      "note": "НЕ СУЩЕСТВУЕТ — событие не описано"
+    }
+  ]
+}

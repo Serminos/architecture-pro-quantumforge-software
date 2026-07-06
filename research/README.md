@@ -306,8 +306,8 @@ ChromaDB рассматриваю только для прототипов бе�
 
 #### Архитектурная схема:
 
-[RAG_QuantumForge_Software.puml](schema/RAG_QuantumForge_Software.puml)
-![RAG_QuantumForge_Software.png](schema/RAG_QuantumForge_Software.png)
+[RAG_QuantumForge_Software.puml](../schema/RAG_QuantumForge_Software.puml)
+![RAG_QuantumForge_Software.png](../schema/RAG_QuantumForge_Software.png)
 
 ### Заключение
 

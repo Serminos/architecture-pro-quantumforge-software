@@ -28,4 +28,4 @@ OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "")
 TOP_K = 5
 
 # Уровень защиты по умолчанию (0 – без защиты)
-SECURITY_LEVEL = 3
+SECURITY_LEVEL = 0
