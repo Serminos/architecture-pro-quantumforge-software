@@ -139,7 +139,6 @@ python analyze_results.py
 [Отчёт о покрытии](coverage_report.md)
 
 ## Диаграмма процесса оценки
-
-![evaluation_flow.png](schema/evaluation_flow.png)
+![evaluation_flow.png](../schema/evaluation_flow.png)
 
 Схема показывает полный цикл: от золотого набора до финального отчёта.
