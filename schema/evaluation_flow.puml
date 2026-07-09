@@ -1,0 +1,73 @@
+@startuml
+!theme plain
+skinparam componentStyle rectangle
+skinparam backgroundColor #FEFEFE
+
+title Процесс оценки RAG-бота
+
+actor "Разработчик" as Dev
+
+folder "golden_questions.json" as Golden {
+  [Вопрос 1]
+  [Вопрос 2]
+  [Вопрос N]
+}
+
+component "test_rag_bot.py" as Test {
+  [Загрузка индекса]
+  [Для каждого вопроса...]
+  [Поиск чанков]
+  [Генерация ответа]
+  [Оценка качества]
+}
+
+database "FAISS-индекс" as Index
+
+database "logs.jsonl" as Log {
+  [timestamp]
+  [question]
+  [has_chunks]
+  [found_keywords]
+  [is_success]
+  [sources]
+  [answer]
+}
+
+component "analyze_results.py" as Analyze {
+  [Чтение логов]
+  [Анализ по категориям]
+  [Выявление пробелов]
+  [Генерация отчёта]
+}
+
+file "coverage_report.md" as Report {
+  [Статистика]
+  [Пробелы в покрытии]
+  [Утечки данных]
+  [Рекомендации]
+}
+
+Dev --> Golden : "Создание набора"
+Golden --> Test : "Загрузка"
+
+Test --> Index : "Поиск"
+Test --> Log : "Запись результата"
+
+Log --> Analyze : "Чтение"
+Analyze --> Report : "Генерация"
+
+note right of Test
+  Критерии оценки:
+  - Найдены ли чанки
+  - Ключевые слова в ответе
+  - Должен/не должен отвечать
+end note
+
+note right of Analyze
+  Выявляет:
+  - Пустые ответы
+  - Низкое качество
+  - Утечки данных
+end note
+
+@enduml

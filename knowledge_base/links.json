@@ -1,0 +1,172 @@
+{
+  "characters": [
+    {
+      "name": "luke_skywalker",
+      "url": "https://starwars.fandom.com/wiki/Luke_Skywalker"
+    },
+    {
+      "name": "darth_vader",
+      "url": "https://starwars.fandom.com/wiki/Darth_Vader"
+    },
+    {
+      "name": "leia_organa",
+      "url": "https://starwars.fandom.com/wiki/Leia_Organa"
+    },
+    {
+      "name": "han_solo",
+      "url": "https://starwars.fandom.com/wiki/Han_Solo"
+    },
+    {
+      "name": "obi_wan_kenobi",
+      "url": "https://starwars.fandom.com/wiki/Obi-Wan_Kenobi"
+    },
+    {
+      "name": "yoda",
+      "url": "https://starwars.fandom.com/wiki/Yoda"
+    },
+    {
+      "name": "emperor_palpatine",
+      "url": "https://starwars.fandom.com/wiki/Palpatine"
+    },
+    {
+      "name": "chewbacca",
+      "url": "https://starwars.fandom.com/wiki/Chewbacca"
+    },
+    {
+      "name": "r2d2",
+      "url": "https://starwars.fandom.com/wiki/R2-D2"
+    },
+    {
+      "name": "c3po",
+      "url": "https://starwars.fandom.com/wiki/C-3PO"
+    },
+    {
+      "name": "boba_fett",
+      "url": "https://starwars.fandom.com/wiki/Boba_Fett"
+    },
+    {
+      "name": "jabba_the_hutt",
+      "url": "https://starwars.fandom.com/wiki/Jabba_Desilijic_Tiure"
+    },
+    {
+      "name": "lando_calrissian",
+      "url": "https://starwars.fandom.com/wiki/Lando_Calrissian"
+    }
+  ],
+  "planets": [
+    {
+      "name": "tatooine",
+      "url": "https://starwars.fandom.com/wiki/Tatooine"
+    },
+    {
+      "name": "coruscant",
+      "url": "https://starwars.fandom.com/wiki/Coruscant"
+    },
+    {
+      "name": "endor",
+      "url": "https://starwars.fandom.com/wiki/Endor"
+    },
+    {
+      "name": "hoth",
+      "url": "https://starwars.fandom.com/wiki/Hoth"
+    },
+    {
+      "name": "dagobah",
+      "url": "https://starwars.fandom.com/wiki/Dagobah"
+    },
+    {
+      "name": "naboo",
+      "url": "https://starwars.fandom.com/wiki/Naboo"
+    },
+    {
+      "name": "kashyyyk",
+      "url": "https://starwars.fandom.com/wiki/Kashyyyk"
+    },
+    {
+      "name": "mustafar",
+      "url": "https://starwars.fandom.com/wiki/Mustafar"
+    },
+    {
+      "name": "geonosis",
+      "url": "https://starwars.fandom.com/wiki/Geonosis"
+    },
+    {
+      "name": "kamino",
+      "url": "https://starwars.fandom.com/wiki/Kamino"
+    }
+  ],
+  "technologies": [
+    {
+      "name": "lightsaber",
+      "url": "https://starwars.fandom.com/wiki/Lightsaber"
+    },
+    {
+      "name": "death_star",
+      "url": "https://starwars.fandom.com/wiki/Death_Star"
+    },
+    {
+      "name": "millennium_falcon",
+      "url": "https://starwars.fandom.com/wiki/Millennium_Falcon"
+    },
+    {
+      "name": "x_wing",
+      "url": "https://starwars.fandom.com/wiki/X-wing_starfighter"
+    },
+    {
+      "name": "tie_fighter",
+      "url": "https://starwars.fandom.com/wiki/TIE_fighter"
+    },
+    {
+      "name": "star_destroyer",
+      "url": "https://starwars.fandom.com/wiki/Star_Destroyer"
+    },
+    {
+      "name": "hyperdrive",
+      "url": "https://starwars.fandom.com/wiki/Hyperdrive"
+    },
+    {
+      "name": "blaster",
+      "url": "https://starwars.fandom.com/wiki/Blaster"
+    }
+  ],
+  "organizations": [
+    {
+      "name": "jedi_order",
+      "url": "https://starwars.fandom.com/wiki/Jedi_Order"
+    },
+    {
+      "name": "sith_order",
+      "url": "https://starwars.fandom.com/wiki/Sith_Order"
+    },
+    {
+      "name": "galactic_empire",
+      "url": "https://starwars.fandom.com/wiki/Galactic_Empire"
+    },
+    {
+      "name": "rebel_alliance",
+      "url": "https://starwars.fandom.com/wiki/Rebel_Alliance"
+    },
+    {
+      "name": "galactic_republic",
+      "url": "https://starwars.fandom.com/wiki/Galactic_Republic"
+    }
+  ],
+  "events": [
+    {
+      "name": "battle_of_yavin",
+      "url": "https://starwars.fandom.com/wiki/Battle_of_Yavin"
+    },
+    {
+      "name": "battle_of_endor",
+      "url": "https://starwars.fandom.com/wiki/Battle_of_Endor"
+    },
+    {
+      "name": "clone_wars",
+      "url": "https://starwars.fandom.com/wiki/Clone_Wars"
+    },
+    {
+      "name": "order_66",
+      "url": "https://starwars.fandom.com/wiki/Order_66"
+    }
+  ]
+}
